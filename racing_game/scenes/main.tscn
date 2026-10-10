@@ -1,0 +1,57 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/tracks/test_track.tscn" id="1_track"]
+[ext_resource type="PackedScene" path="res://scenes/vehicles/sports_car.tscn" id="2_car"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="Script" path="res://scripts/camera/chase_camera.gd" id="4_cam"]
+[ext_resource type="Script" path="res://scripts/managers/race_manager.gd" id="5_mgr"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("Sky_mat")
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+tonemap_mode = 2
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, 0.383, -0.3214, 0, 0.6428, 0.766, 0.5, -0.6634, 0.5567, 0, 20, 0)
+shadow_enabled = true
+directional_shadow_mode = 0
+directional_shadow_max_distance = 80.0
+
+[node name="TestTrack" parent="." instance=ExtResource("1_track")]
+
+[node name="SportsCar" parent="." instance=ExtResource("2_car")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 1.5, 32)
+
+[node name="ChaseCamera" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 3, 32)
+script = ExtResource("4_cam")
+target = NodePath("../SportsCar")
+follow_speed = 5.0
+
+[node name="SpringArm3D" type="SpringArm3D" parent="ChaseCamera"]
+transform = Transform3D(1, 0, 0, 0, 0.9397, 0.342, 0, -0.342, 0.9397, 0, 0, 0)
+collision_mask = 4
+spring_length = 6.0
+margin = 0.1
+
+[node name="Camera3D" type="Camera3D" parent="ChaseCamera/SpringArm3D"]
+current = true
+fov = 70.0
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="RaceManager" type="Node" parent="."]
+script = ExtResource("5_mgr")
+car = NodePath("../SportsCar")
+hud = NodePath("../HUD")
+total_laps = 3

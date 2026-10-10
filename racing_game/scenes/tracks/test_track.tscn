@@ -1,0 +1,226 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/tracks/checkpoint.gd" id="1_cp"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_road"]
+albedo_color = Color(0.18, 0.18, 0.2, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_grass"]
+albedo_color = Color(0.18, 0.42, 0.18, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_infield"]
+albedo_color = Color(0.25, 0.6, 0.25, 1)
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.9, 0.4, 0.1, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_line"]
+albedo_color = Color(1, 1, 1, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_marker"]
+albedo_color = Color(1, 0.85, 0.1, 1)
+roughness = 0.3
+
+[sub_resource type="PlaneMesh" id="Mesh_road"]
+material = SubResource("Mat_road")
+size = Vector2(200, 200)
+
+[sub_resource type="PlaneMesh" id="Mesh_grass"]
+material = SubResource("Mat_grass")
+size = Vector2(1000, 1000)
+
+[sub_resource type="BoxMesh" id="Mesh_infield"]
+material = SubResource("Mat_infield")
+size = Vector3(140, 2, 140)
+
+[sub_resource type="BoxMesh" id="Mesh_wall_ns"]
+material = SubResource("Mat_wall")
+size = Vector3(204, 2, 2)
+
+[sub_resource type="BoxMesh" id="Mesh_wall_ew"]
+material = SubResource("Mat_wall")
+size = Vector3(2, 2, 204)
+
+[sub_resource type="BoxMesh" id="Mesh_line"]
+material = SubResource("Mat_line")
+size = Vector3(10, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_marker"]
+material = SubResource("Mat_marker")
+size = Vector3(30, 0.06, 0.6)
+
+[sub_resource type="BoxShape3D" id="Shape_road"]
+size = Vector3(200, 2, 200)
+
+[sub_resource type="BoxShape3D" id="Shape_infield"]
+size = Vector3(140, 2, 140)
+
+[sub_resource type="BoxShape3D" id="Shape_wall_ns"]
+size = Vector3(204, 2, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_wall_ew"]
+size = Vector3(2, 2, 204)
+
+[sub_resource type="BoxShape3D" id="Shape_gate"]
+size = Vector3(30, 6, 2)
+
+[node name="TestTrack" type="Node3D"]
+
+[node name="Road" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Road"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("Shape_road")
+
+[node name="RoadMesh" type="MeshInstance3D" parent="Road"]
+mesh = SubResource("Mesh_road")
+
+[node name="Grass" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("Mesh_grass")
+
+[node name="Infield" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Infield"]
+shape = SubResource("Shape_infield")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Infield"]
+mesh = SubResource("Mesh_infield")
+
+[node name="Barriers" type="Node3D" parent="."]
+
+[node name="WallNorth" type="StaticBody3D" parent="Barriers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -101)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallNorth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Barriers/WallNorth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="WallSouth" type="StaticBody3D" parent="Barriers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 101)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallSouth"]
+shape = SubResource("Shape_wall_ns")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Barriers/WallSouth"]
+mesh = SubResource("Mesh_wall_ns")
+
+[node name="WallEast" type="StaticBody3D" parent="Barriers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 101, 1, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallEast"]
+shape = SubResource("Shape_wall_ew")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Barriers/WallEast"]
+mesh = SubResource("Mesh_wall_ew")
+
+[node name="WallWest" type="StaticBody3D" parent="Barriers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -101, 1, 0)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barriers/WallWest"]
+shape = SubResource("Shape_wall_ew")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Barriers/WallWest"]
+mesh = SubResource("Mesh_wall_ew")
+
+[node name="Checkpoints" type="Node3D" parent="."]
+
+[node name="FinishLine" type="Area3D" parent="Checkpoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 3, 20)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_cp")
+index = 0
+is_finish_line = true
+
+[node name="GateShape" type="CollisionShape3D" parent="Checkpoints/FinishLine"]
+shape = SubResource("Shape_gate")
+
+[node name="LineMesh" type="MeshInstance3D" parent="Checkpoints/FinishLine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.9, 0)
+mesh = SubResource("Mesh_line")
+
+[node name="Checkpoint1" type="Area3D" parent="Checkpoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85, 3, -45)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_cp")
+index = 1
+is_finish_line = false
+
+[node name="GateShape" type="CollisionShape3D" parent="Checkpoints/Checkpoint1"]
+shape = SubResource("Shape_gate")
+
+[node name="Marker" type="MeshInstance3D" parent="Checkpoints/Checkpoint1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.97, 0)
+mesh = SubResource("Mesh_marker")
+
+[node name="Checkpoint2" type="Area3D" parent="Checkpoints"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 3, -85)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_cp")
+index = 2
+is_finish_line = false
+
+[node name="GateShape" type="CollisionShape3D" parent="Checkpoints/Checkpoint2"]
+shape = SubResource("Shape_gate")
+
+[node name="Marker" type="MeshInstance3D" parent="Checkpoints/Checkpoint2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.97, 0)
+mesh = SubResource("Mesh_marker")
+
+[node name="Checkpoint3" type="Area3D" parent="Checkpoints"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -85, 3, 0)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_cp")
+index = 3
+is_finish_line = false
+
+[node name="GateShape" type="CollisionShape3D" parent="Checkpoints/Checkpoint3"]
+shape = SubResource("Shape_gate")
+
+[node name="Marker" type="MeshInstance3D" parent="Checkpoints/Checkpoint3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.97, 0)
+mesh = SubResource("Mesh_marker")
+
+[node name="Checkpoint4" type="Area3D" parent="Checkpoints"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 3, 85)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_cp")
+index = 4
+is_finish_line = false
+
+[node name="GateShape" type="CollisionShape3D" parent="Checkpoints/Checkpoint4"]
+shape = SubResource("Shape_gate")
+
+[node name="Marker" type="MeshInstance3D" parent="Checkpoints/Checkpoint4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.97, 0)
+mesh = SubResource("Mesh_marker")
